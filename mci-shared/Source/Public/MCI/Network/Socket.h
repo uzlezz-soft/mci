@@ -4,6 +4,7 @@
 #include "MCI/Network/Packet.h"
 #include <unordered_map>
 #include <unordered_set>
+#include <functional>
 
 struct _ENetHost;
 struct _ENetAddress;
@@ -28,32 +29,6 @@ namespace MCI
 		CDR_Kick
 	};
 
-	class Socket;
-
-	class SocketHandler
-	{
-	public:
-
-		/* Shared events */
-
-		virtual void OnSocketClosed(Socket& socket) {}
-
-		/* Client events */
-
-		virtual void OnConnectedToServer(Socket& socket) {}
-		virtual void OnConnectionUnsuccessfull(Socket& socket) {}
-		virtual void OnDisconnectedFromServer(Socket& socket, ClientDisconnectReason reason) {}
-		virtual void OnReceivedPacket(Socket& socket, Packet& packet) {}
-
-		/* Server events */
-
-		virtual void OnServerStarted(Socket& socket) {}
-		virtual void OnClientConnected(Socket& socket, ClientId id) {}
-		virtual void OnClientDisconnected(Socket& socket, ClientId id, ClientDisconnectReason reason) {}
-		virtual void OnReceivedPacketFromClient(Socket& socket, ClientId id, Packet& packet) {}
-
-	};
-
 	class Socket final
 	{
 	public:
@@ -61,7 +36,19 @@ namespace MCI
 		static void InitSubsystem();
 		static void ShutdownSubsystem();
 
-		Socket(SocketHandler& handler);
+		std::function<void(Socket&)> OnClosed;
+
+		std::function<void(Socket&)> OnConnectedToServer;
+		std::function<void(Socket&)> OnConnectUnsuccessfull;
+		std::function<void(Socket&, ClientDisconnectReason)> OnDisconnectedFromServer;
+		std::function<void(Socket&, Packet&)> OnReceivedPacket;
+
+		std::function<void(Socket&)> OnServerStarted;
+		std::function<void(Socket&, ClientId)> OnClientConnected;
+		std::function<void(Socket&, ClientId, ClientDisconnectReason)> OnClientDisconnected;
+		std::function<void(Socket&, ClientId, Packet&)> OnReceivedPacketFromClient;
+
+		Socket();
 		~Socket();
 
 		void StartListening(uint16 port, ClientId maxClients = 64);
@@ -84,8 +71,6 @@ namespace MCI
 		std::vector<ClientId> GetConnectedClients() const;
 
 	private:
-
-		SocketHandler& m_handler;
 
 		bool m_server{ false };
 		_ENetHost* m_host{ nullptr };

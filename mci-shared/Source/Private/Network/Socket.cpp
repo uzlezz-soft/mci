@@ -19,7 +19,7 @@ namespace MCI
 		MCI_LOG_TRACE("Network subsystem shutdowned.");
 	}
 
-	Socket::Socket(SocketHandler& handler) : m_handler(handler)
+	Socket::Socket()
 	{
 	}
 
@@ -41,7 +41,7 @@ namespace MCI
 
 		MCI_ASSERT(m_host, "Couldn't start server!");
 
-		m_handler.OnServerStarted(*this);
+		if (OnServerStarted) OnServerStarted(*this);
 		MCI_LOG_DEBUG("Started listening on port {}", port);
 	}
 
@@ -67,7 +67,7 @@ namespace MCI
 		enet_peer_timeout(m_clientPeer, ENET_PEER_TIMEOUT_LIMIT, 3000, 5000);
 
 		m_connected = true;
-		m_handler.OnConnectedToServer(*this);
+		if (OnConnectedToServer) OnConnectedToServer(*this);
 		MCI_LOG_INFO("Connected to {}:{}", ip, port);
 	}
 
@@ -148,7 +148,7 @@ namespace MCI
 
 						MCI_LOG_INFO("New client connected with id {}.", id);
 
-						m_handler.OnClientConnected(*this, id);
+						if (OnClientConnected) OnClientConnected(*this, id);
 
 						break;
 					}
@@ -158,7 +158,7 @@ namespace MCI
 						ClientId id = (ClientId)event.peer->data;
 						m_clients.erase(id);
 						MCI_LOG_INFO("Client with id {} disconnected.", id);
-						m_handler.OnClientDisconnected(*this, id, CDR_Disconnect);
+						if (OnClientDisconnected) OnClientDisconnected(*this, id, CDR_Disconnect);
 
 						break;
 					}
@@ -168,7 +168,7 @@ namespace MCI
 						ClientId id = (ClientId)event.peer->data;
 						m_clients.erase(id);
 						MCI_LOG_INFO("Client with id {} disconnected (timeout).", id);
-						m_handler.OnClientDisconnected(*this, id, CDR_TimeOut);
+						if (OnClientDisconnected) OnClientDisconnected(*this, id, CDR_TimeOut);
 
 						break;
 					}
@@ -181,7 +181,7 @@ namespace MCI
 						packet.Append(event.packet->data, event.packet->dataLength);
 						enet_packet_destroy(event.packet);
 
-						m_handler.OnReceivedPacketFromClient(*this, id, packet);
+						OnReceivedPacketFromClient(*this, id, packet);
 
 						break;
 					}
@@ -201,12 +201,12 @@ namespace MCI
 						if (event.data == 69)
 						{
 							MCI_LOG_INFO("Disconnected from server! (Kick)");
-							m_handler.OnDisconnectedFromServer(*this, CDR_Kick);
+							if (OnDisconnectedFromServer) OnDisconnectedFromServer(*this, CDR_Kick);
 						}
 						else
 						{
 							MCI_LOG_INFO("Disconnected from server!");
-							m_handler.OnDisconnectedFromServer(*this, CDR_Disconnect);
+							if (OnDisconnectedFromServer) OnDisconnectedFromServer(*this, CDR_Disconnect);
 						}
 
 						break;
@@ -216,7 +216,7 @@ namespace MCI
 					{
 						MCI_LOG_INFO("Disconnected from server! (timeout)");
 						m_connected = false;
-						m_handler.OnDisconnectedFromServer(*this, CDR_TimeOut);
+						if (OnDisconnectedFromServer) OnDisconnectedFromServer(*this, CDR_TimeOut);
 
 						break;
 					}
@@ -227,7 +227,7 @@ namespace MCI
 						packet.Append(event.packet->data, event.packet->dataLength);
 						enet_packet_destroy(event.packet);
 
-						m_handler.OnReceivedPacket(*this, packet);
+						OnReceivedPacket(*this, packet);
 						break;
 					}
 				}
@@ -277,7 +277,7 @@ namespace MCI
 			for (auto& [id, peer] : m_clients)
 			{
 				enet_peer_disconnect(peer, 0);
-				m_handler.OnClientDisconnected(*this, id, CDR_Disconnect);
+				OnClientDisconnected(*this, id, CDR_Disconnect);
 			}
 
 			m_clients.clear();
@@ -285,7 +285,7 @@ namespace MCI
 
 		enet_host_destroy(m_host);
 		m_host = nullptr;
-		m_handler.OnSocketClosed(*this);
+		if (OnClosed) OnClosed(*this);
 	}
 
 	std::vector<ClientId> Socket::GetConnectedClients() const
