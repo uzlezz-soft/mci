@@ -1,5 +1,6 @@
 #include "MCI/Network/Packet.h"
 #include <enet/enet.h>
+#include <cstring>
 
 namespace MCI
 {

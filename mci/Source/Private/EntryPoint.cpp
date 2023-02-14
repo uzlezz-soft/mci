@@ -74,7 +74,7 @@ int main()
 		}
 	};
 
-	client.Connect("127.0.0.1", 6969);
+	client.Connect("192.168.0.60", 6969);
 
 	Packet packet;
 	packet << CP_Connect;

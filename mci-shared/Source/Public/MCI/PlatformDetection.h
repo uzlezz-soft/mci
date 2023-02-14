@@ -13,7 +13,7 @@
 #endif
 #elif defined(__linux__)
 #define MCI_PLATFORM_LINUX
-#error "Linux is not supported! (yet)"
+//#error "Linux is not supported! (yet)"
 #else
 /* Unknown compiler/platform */
 #error "Unknown platform!"

@@ -1,7 +1,27 @@
 include "Dependencies.lua"
 
 workspace "MCI"
-    architecture "x86_64"
+    if _OPTIONS["toolset"] then
+        toolset(_OPTIONS["toolset"])
+    end
+
+    filter "toolset:msc*"
+        buildoptions { "/utf-8", "/Zm200" }
+
+    filter "platforms:*32"
+        architecture "x86"
+
+    filter "platforms:*64"
+        architecture "x86_64"
+
+    filter "platforms:*ARM"
+        architecture "arm"
+
+    filter "toolset:gcc* or clang*"
+		links { "stdc++fs" }
+
+    filter {}
+
     startproject "mci"
 
     flags { "NoPCH" }

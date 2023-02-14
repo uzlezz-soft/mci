@@ -8,7 +8,7 @@
 
 #if defined(MCI_PLATFORM_WINDOWS)
 #define MCI_DEBUGBREAK() __debugbreak()
-#elif defined(MCIPLATFORM_LINUX)
+#elif defined(MCI_PLATFORM_LINUX)
 #include <signal.h>
 #define MCI_DEBUGBREAK() raise(SIGTRAP)
 #else

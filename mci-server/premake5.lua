@@ -34,3 +34,6 @@ project "mci-server"
 	}
 
 	disablewarnings { "4251", "4005", "4267" }
+
+	filter "toolset:gcc* or clang*"
+		links { "stdc++fs" }

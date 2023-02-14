@@ -15,7 +15,7 @@ namespace MCI
 	struct Block
 	{
 		uint8 Id;
-		const const BlockInfo* Info;
+		const BlockInfo* Info;
 	};
 
 	enum class MeshType : uint8
