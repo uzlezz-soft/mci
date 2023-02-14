@@ -4,12 +4,11 @@
 #define NOMINMAX
 #define PLATFORM_WINDOWS
 
+#define MCI_PLATFORM_WINDOWS
 #ifdef _WIN64
 	/* Windows x64  */
-#define MCI_PLATFORM_WINDOWS
 #else
 	/* Windows x86 */
-#error "x86 Builds are not supported!"
 #endif
 #elif defined(__linux__)
 #define MCI_PLATFORM_LINUX

@@ -8,11 +8,10 @@ workspace "MCI"
     filter "toolset:msc*"
         buildoptions { "/utf-8", "/Zm200" }
 
-    filter "platforms:*32"
-        architecture "x86"
+    architecture "x86_64"
 
-    filter "platforms:*64"
-        architecture "x86_64"
+    --filter "platforms:*32"
+    --    architecture "x86"
 
     filter "platforms:*ARM"
         architecture "arm"
