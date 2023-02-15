@@ -26,8 +26,8 @@ namespace MCI
 	struct Vertex
 	{
 		glm::vec3 Position;
-		glm::vec2 TexCoord;
-		uint16 TextureOffset;
+		glm::vec3 TexCoord;
+
 	};
 
 	template <typename S>

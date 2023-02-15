@@ -1,5 +1,7 @@
 #include "OpenGL.h"
 
+#ifndef MCI_SHIPPING
+
 const char* MCI::OpenGLErrorToString(uint32 err) noexcept
 {
 	switch (err)
@@ -19,3 +21,5 @@ const char* MCI::OpenGLErrorToString(uint32 err) noexcept
 
 	return "NO_ERROR";
 }
+
+#endif

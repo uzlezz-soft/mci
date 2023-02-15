@@ -74,7 +74,7 @@ int main()
 		}
 	};
 
-	client.Connect("192.168.0.60", 6969);
+	client.Connect("194.158.212.198", 6969);
 
 	Packet packet;
 	packet << CP_Connect;
@@ -98,7 +98,7 @@ int main()
 		if (window->IsKeyDown(KeyCode::M))
 		{
 			Packet packet;
-			packet << CP_ChatMessage;
+			packet << (uint8)CP_ChatMessage;
 			packet << "Lesha bot";
 
 			client.SendPacket(packet);

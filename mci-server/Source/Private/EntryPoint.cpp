@@ -43,7 +43,7 @@ int main()
 		clients.erase(id);
 
 		Packet packet;
-		packet << SP_ChatMessage;
+		packet << (uint8)SP_ChatMessage;
 		packet << fmt::format("Client with id {} disconnected", id).data();
 
 		server.SendPacketToAll(packet);
@@ -71,7 +71,7 @@ int main()
 			packet >> client.Name;
 
 			Packet blocksInfo;
-			blocksInfo << SP_BlocksInfo;
+			blocksInfo << (uint8)SP_BlocksInfo;
 			blocksInfo << BlocksDatabase::GetNumberOfBlocks();
 
 			for (uint8 i = 1; i <= BlocksDatabase::GetNumberOfBlocks(); i++)
@@ -107,7 +107,7 @@ int main()
 			packet >> message;
 
 			Packet p;
-			p << SP_ChatMessage;
+			p << (uint8)SP_ChatMessage;
 			p << fmt::format("{}: {}", client.Name, message).data();
 
 			//socket.SendPacketToAllExcept({ id }, p);

@@ -20,6 +20,8 @@ workspace "MCI"
 		links { "stdc++fs" }
 
     filter {}
+	
+	debugdir "%{wks.location}/resources"
 
     startproject "mci"
 
